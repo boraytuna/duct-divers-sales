@@ -12,23 +12,32 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // ── Name change — check open session ─────────────────────────
 let checkTimeout = null;
+let activeCheckId = 0; // tracks which check is the latest
+
 function onNameChange() {
   clearTimeout(checkTimeout);
+  activeCheckId++; // invalidate any previous in-flight response
+
   const name = document.getElementById("hoursName").value.trim();
-  
-  // Immediately disable both while we check
+
   document.getElementById("btnClockIn").disabled  = true;
   document.getElementById("btnClockOut").disabled = true;
   document.getElementById("statusDot").className  = "status-dot";
-  document.getElementById("statusText").textContent = "Checking…";
+  document.getElementById("statusText").textContent = "🔍 Searching records…";
 
   if (!name) { setInitialButtonState(); return; }
-  checkTimeout = setTimeout(() => checkStatus(name), 500);
+  
+  const thisCheckId = activeCheckId;
+  checkTimeout = setTimeout(() => checkStatus(name, thisCheckId), 500);
 }
 
-async function checkStatus(name) {
+async function checkStatus(name, checkId) {
   try {
     const data = await Sheets.get({ action: "getClockStatus", name });
+    
+    // If a newer check has started since this one, ignore this response
+    if (checkId !== activeCheckId) return;
+
     updateStatusUI(data.status, data.clockedInAt);
     await loadTodaySessions(name);
   } catch (e) {

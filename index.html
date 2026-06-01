@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Duct Divers — Sales</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500;600&display=swap"
+    rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
 </head>
+
 <body>
 
   <div class="app-shell">
@@ -37,8 +41,8 @@
         <!-- Customer Name -->
         <div class="field-group">
           <label class="field-label" for="customerName">Customer Name <span class="req">*</span></label>
-          <input class="field-input" type="text" id="customerName" name="customerName"
-            placeholder="Full name" autocomplete="off" required />
+          <input class="field-input" type="text" id="customerName" name="customerName" placeholder="Full name"
+            autocomplete="off" required />
           <span class="field-error" id="err-customerName">Required</span>
         </div>
 
@@ -56,8 +60,8 @@
         <!-- Address -->
         <div class="field-group">
           <label class="field-label" for="address">Address <span class="req">*</span></label>
-          <input class="field-input" type="text" id="address" name="address"
-            placeholder="Street address" autocomplete="off" required />
+          <input class="field-input" type="text" id="address" name="address" placeholder="Street address"
+            autocomplete="off" required />
           <span class="field-error" id="err-address">Required</span>
         </div>
 
@@ -75,6 +79,20 @@
             <span class="select-arrow">▾</span>
           </div>
           <span class="field-error" id="err-serviceType">Required</span>
+        </div>
+
+        <!-- Scheduled Date -->
+        <div class="field-group">
+          <label class="field-label" for="scheduledDate">Scheduled Date <span class="req">*</span></label>
+          <input class="field-input" type="date" id="scheduledDate" name="scheduledDate" required />
+          <span class="field-error" id="err-scheduledDate">Required</span>
+        </div>
+
+        <!-- Scheduled Time -->
+        <div class="field-group">
+          <label class="field-label" for="scheduledTime">Scheduled Time <span class="req">*</span></label>
+          <input class="field-input" type="time" id="scheduledTime" name="scheduledTime" required />
+          <span class="field-error" id="err-scheduledTime">Required</span>
         </div>
 
         <!-- Payment Method -->
@@ -97,16 +115,16 @@
           <label class="field-label" for="price">Price <span class="optional">(optional)</span></label>
           <div class="price-wrap">
             <span class="price-symbol">$</span>
-            <input class="field-input price-input" type="number" id="price" name="price"
-              placeholder="0.00" min="0" step="0.01" />
+            <input class="field-input price-input" type="number" id="price" name="price" placeholder="0.00" min="0"
+              step="0.01" />
           </div>
         </div>
 
         <!-- Notes -->
         <div class="field-group">
           <label class="field-label" for="notes">Notes <span class="optional">(optional)</span></label>
-          <textarea class="field-input field-textarea" id="notes" name="notes"
-            placeholder="Anything worth noting…" rows="3"></textarea>
+          <textarea class="field-input field-textarea" id="notes" name="notes" placeholder="Anything worth noting…"
+            rows="3"></textarea>
         </div>
 
         <!-- Submit -->
@@ -133,4 +151,5 @@
   <script src="js/sheets.js"></script>
   <script src="js/sales.js"></script>
 </body>
+
 </html>

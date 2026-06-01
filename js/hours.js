@@ -15,6 +15,13 @@ let checkTimeout = null;
 function onNameChange() {
   clearTimeout(checkTimeout);
   const name = document.getElementById("hoursName").value.trim();
+  
+  // Immediately disable both while we check
+  document.getElementById("btnClockIn").disabled  = true;
+  document.getElementById("btnClockOut").disabled = true;
+  document.getElementById("statusDot").className  = "status-dot";
+  document.getElementById("statusText").textContent = "Checking…";
+
   if (!name) { setInitialButtonState(); return; }
   checkTimeout = setTimeout(() => checkStatus(name), 500);
 }

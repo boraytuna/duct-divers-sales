@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Duct Divers — Hours</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <div class="app-shell">
+
+    <nav class="nav">
+      <div class="nav-logo">
+        <span class="logo-mark">DD</span>
+        <span class="logo-text">Duct Divers</span>
+      </div>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link">New Sale</a>
+        <a href="hours.html" class="nav-link active">Hours</a>
+        <a href="leaderboard.html" class="nav-link">Board</a>
+      </div>
+    </nav>
+
+    <main class="main">
+      <div class="page-header">
+        <h1 class="page-title">Clock In / Out</h1>
+        <p class="page-sub">Clock out for lunch or long breaks, then back in when you return.</p>
+      </div>
+
+      <div class="form-card">
+
+        <!-- Salesman Name -->
+        <div class="field-group">
+          <label class="field-label" for="hoursName">Your Name <span class="req">*</span></label>
+          <div class="autocomplete-wrap">
+            <input class="field-input" type="text" id="hoursName" name="hoursName"
+              placeholder="Start typing your name…" autocomplete="off" />
+            <ul class="autocomplete-list" id="hoursSuggestions" role="listbox"></ul>
+          </div>
+          <span class="field-error" id="err-hoursName">Required</span>
+        </div>
+
+        <!-- Status display -->
+        <div class="clock-status" id="clockStatus">
+          <div class="status-dot" id="statusDot"></div>
+          <span id="statusText">Enter your name to see status</span>
+        </div>
+
+        <!-- Action buttons -->
+        <div class="clock-actions">
+          <button type="button" class="btn-clock btn-clockin" id="btnClockIn" onclick="handleClockIn()">
+            Clock In
+          </button>
+          <button type="button" class="btn-clock btn-clockout" id="btnClockOut" onclick="handleClockOut()">
+            Clock Out
+          </button>
+        </div>
+
+        <!-- Today's sessions -->
+        <div class="sessions-section" id="sessionsSection" hidden>
+          <h3 class="sessions-title">Today's Sessions</h3>
+          <div id="sessionsList" class="sessions-list"></div>
+          <div class="sessions-total" id="sessionsTotal"></div>
+        </div>
+
+      </div>
+
+      <!-- Confirmation banner -->
+      <div class="success-banner" id="hoursBanner" hidden>
+        <span class="success-icon" id="hoursBannerIcon">✓</span>
+        <div>
+          <strong id="hoursBannerTitle">Clocked In!</strong>
+          <p id="hoursBannerSub">Have a great shift.</p>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/sheets.js"></script>
+  <script src="js/hours.js"></script>
+</body>
+</html>

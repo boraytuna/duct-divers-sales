@@ -12,21 +12,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // ── Name change — check open session ─────────────────────────
 let checkTimeout = null;
-let activeCheckId = 0; // tracks which check is the latest
+let activeCheckId = 0;
 
 function onNameChange() {
   clearTimeout(checkTimeout);
-  activeCheckId++; // invalidate any previous in-flight response
+  activeCheckId++;
 
   const name = document.getElementById("hoursName").value.trim();
 
-  document.getElementById("btnClockIn").disabled  = true;
-  document.getElementById("btnClockOut").disabled = true;
-  document.getElementById("statusDot").className  = "status-dot";
+  // Lock both and show searching — no button is valid until backend responds
+  setButtonState("searching");
+  document.getElementById("statusDot").className    = "status-dot";
   document.getElementById("statusText").textContent = "🔍 Searching records…";
 
   if (!name) { setInitialButtonState(); return; }
-  
+
   const thisCheckId = activeCheckId;
   checkTimeout = setTimeout(() => checkStatus(name, thisCheckId), 500);
 }
@@ -34,42 +34,53 @@ function onNameChange() {
 async function checkStatus(name, checkId) {
   try {
     const data = await Sheets.get({ action: "getClockStatus", name });
-    
-    // If a newer check has started since this one, ignore this response
-    if (checkId !== activeCheckId) return;
-
+    if (checkId !== activeCheckId) return; // stale response, ignore
     updateStatusUI(data.status, data.clockedInAt);
     await loadTodaySessions(name);
   } catch (e) {
     console.error("Status check failed:", e);
+    setButtonState("searching"); // keep locked on error
   }
+}
+
+// ── Single source of truth for button state ──────────────────
+// state: "initial" | "searching" | "in" | "out"
+function setButtonState(state) {
+  const btnIn  = document.getElementById("btnClockIn");
+  const btnOut = document.getElementById("btnClockOut");
+
+  // Always reset both first
+  btnIn.disabled  = true;
+  btnOut.disabled = true;
+
+  if (state === "in") {
+    btnOut.disabled = false; // clocked in → only Clock Out available
+  } else if (state === "out") {
+    btnIn.disabled = false;  // clocked out → only Clock In available
+  }
+  // "initial" and "searching" → both stay disabled
 }
 
 function updateStatusUI(status, clockedInAt) {
   const dot  = document.getElementById("statusDot");
   const text = document.getElementById("statusText");
-  const btnIn  = document.getElementById("btnClockIn");
-  const btnOut = document.getElementById("btnClockOut");
 
   if (status === "in") {
-    dot.className  = "status-dot in";
+    dot.className    = "status-dot in";
     text.textContent = `Clocked in since ${clockedInAt}`;
-    btnIn.disabled  = true;
-    btnOut.disabled = false;
+    setButtonState("in");
   } else {
-    dot.className  = "status-dot out";
+    dot.className    = "status-dot out";
     text.textContent = "Not currently clocked in";
-    btnIn.disabled  = false;
-    btnOut.disabled = true;
+    setButtonState("out");
   }
 }
 
 function setInitialButtonState() {
-  document.getElementById("statusDot").className = "status-dot";
+  document.getElementById("statusDot").className    = "status-dot";
   document.getElementById("statusText").textContent = "Enter your name to see status";
-  document.getElementById("btnClockIn").disabled  = true;
-  document.getElementById("btnClockOut").disabled = true;
   document.getElementById("sessionsSection").hidden = true;
+  setButtonState("initial");
 }
 
 // ── Clock In ─────────────────────────────────────────────────
@@ -77,20 +88,19 @@ async function handleClockIn() {
   const name = document.getElementById("hoursName").value.trim();
   if (!showNameError(name)) return;
 
-  setBtnLoading(true);
+  setButtonState("searching"); // lock both while request is in flight
 
   const now = new Date().toLocaleString("en-US", { timeZone: "America/New_York" });
 
   try {
     await Sheets.post({ action: "clockIn", name, timestamp: now });
-    showHoursBanner("in");
     updateStatusUI("in", formatTime(new Date()));
+    showHoursBanner("in");
     await loadTodaySessions(name);
   } catch (e) {
     alert("Clock in failed. Check your connection and try again.");
     console.error(e);
-  } finally {
-    setBtnLoading(false);
+    updateStatusUI("out", null); // restore correct state on failure
   }
 }
 
@@ -99,20 +109,19 @@ async function handleClockOut() {
   const name = document.getElementById("hoursName").value.trim();
   if (!showNameError(name)) return;
 
-  setBtnLoading(true);
+  setButtonState("searching"); // lock both while request is in flight
 
   const now = new Date().toLocaleString("en-US", { timeZone: "America/New_York" });
 
   try {
     await Sheets.post({ action: "clockOut", name, timestamp: now });
-    showHoursBanner("out");
     updateStatusUI("out", null);
+    showHoursBanner("out");
     await loadTodaySessions(name);
   } catch (e) {
     alert("Clock out failed. Check your connection and try again.");
     console.error(e);
-  } finally {
-    setBtnLoading(false);
+    updateStatusUI("in", formatTime(new Date())); // restore correct state on failure
   }
 }
 
@@ -144,7 +153,6 @@ function renderSessions(sessions) {
     `;
   }).join("");
 
-  // Sum completed sessions
   const totalMins = sessions
     .filter(s => s.durationMins != null)
     .reduce((acc, s) => acc + s.durationMins, 0);
@@ -177,11 +185,6 @@ function showNameError(name) {
   return true;
 }
 
-function setBtnLoading(loading) {
-  document.getElementById("btnClockIn").disabled  = loading;
-  document.getElementById("btnClockOut").disabled = loading;
-}
-
 function showHoursBanner(type) {
   const banner = document.getElementById("hoursBanner");
   const icon   = document.getElementById("hoursBannerIcon");
@@ -189,19 +192,19 @@ function showHoursBanner(type) {
   const sub    = document.getElementById("hoursBannerSub");
 
   if (type === "in") {
-    icon.textContent  = "✓";
-    title.textContent = "Clocked In!";
-    sub.textContent   = "Have a great shift.";
-    banner.style.borderColor = "var(--green)";
-    banner.style.background  = "rgba(45,206,137,0.1)";
-    icon.style.color  = "var(--green)";
+    icon.textContent             = "✓";
+    title.textContent            = "Clocked In!";
+    sub.textContent              = "Have a great shift.";
+    banner.style.borderColor     = "var(--green)";
+    banner.style.background      = "rgba(45,206,137,0.1)";
+    icon.style.color             = "var(--green)";
   } else {
-    icon.textContent  = "✓";
-    title.textContent = "Clocked Out!";
-    sub.textContent   = "See you next time.";
-    banner.style.borderColor = "var(--red)";
-    banner.style.background  = "rgba(245,60,60,0.08)";
-    icon.style.color  = "var(--red)";
+    icon.textContent             = "✓";
+    title.textContent            = "Clocked Out!";
+    sub.textContent              = "See you next time.";
+    banner.style.borderColor     = "var(--red)";
+    banner.style.background      = "rgba(245,60,60,0.08)";
+    icon.style.color             = "var(--red)";
   }
 
   banner.hidden = false;

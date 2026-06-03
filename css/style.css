@@ -1,5 +1,5 @@
 /* ============================================================
-   DUCT DIVERS SALES SYSTEM â€” STYLESHEET
+   DUCT DIVERS SALES SYSTEM - STYLESHEET
    Mobile-first. Industrial/utilitarian aesthetic.
    ============================================================ */
 
@@ -32,7 +32,7 @@ body {
   min-height: 100dvh;
 }
 
-/* â”€â”€ APP SHELL â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* APP SHELL */
 .app-shell {
   max-width: 480px;
   margin: 0 auto;
@@ -41,7 +41,7 @@ body {
   flex-direction: column;
 }
 
-/* â”€â”€ NAV â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* NAV */
 .nav {
   display: flex;
   align-items: center;
@@ -100,7 +100,7 @@ body {
 .nav-link:hover { color: var(--text); background: var(--surface2); }
 .nav-link.active { color: var(--accent); }
 
-/* â”€â”€ MAIN â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* MAIN */
 .main {
   flex: 1;
   padding: 24px 16px 40px;
@@ -109,7 +109,7 @@ body {
   gap: 20px;
 }
 
-/* â”€â”€ PAGE HEADER â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* PAGE HEADER */
 .page-header { padding-left: 4px; }
 
 .page-title {
@@ -128,7 +128,7 @@ body {
   font-weight: 500;
 }
 
-/* â”€â”€ FORM CARD â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* FORM CARD */
 .form-card {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -139,7 +139,7 @@ body {
   gap: 20px;
 }
 
-/* â”€â”€ FIELDS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* FIELDS */
 .field-group { display: flex; flex-direction: column; gap: 6px; position: relative; }
 
 .field-label {
@@ -184,7 +184,7 @@ body {
 }
 .field-error.visible { display: block; }
 
-/* â”€â”€ SELECT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* SELECT */
 .select-wrap { position: relative; }
 .field-select { cursor: pointer; padding-right: 36px; }
 .select-arrow {
@@ -198,7 +198,7 @@ body {
 }
 .field-select option { background: var(--surface2); color: var(--text); }
 
-/* â”€â”€ PILL PAYMENT BUTTONS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* PILL PAYMENT BUTTONS */
 .pill-group { display: flex; gap: 10px; }
 
 .pill {
@@ -230,7 +230,7 @@ body {
 
 .pill-icon { font-size: 1.1rem; }
 
-/* â”€â”€ PRICE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* â”€â”€ PRICE */
 .price-wrap { position: relative; }
 .price-symbol {
   position: absolute;
@@ -245,10 +245,10 @@ body {
 .price-input::-webkit-outer-spin-button,
 .price-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 
-/* â”€â”€ TEXTAREA â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* TEXT AREA */
 .field-textarea { resize: vertical; min-height: 80px; line-height: 1.5; }
 
-/* â”€â”€ SUBMIT BUTTON â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* SUBMIT BUTTON */
 .btn-submit {
   width: 100%;
   background: var(--accent);
@@ -272,7 +272,7 @@ body {
 .btn-spinner { display: inline-block; animation: spin 0.8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* â”€â”€ AUTOCOMPLETE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* AUTOCOMPLETE */
 .autocomplete-wrap { position: relative; }
 
 .autocomplete-list {
@@ -304,7 +304,7 @@ body {
 .autocomplete-list li:hover,
 .autocomplete-list li.highlighted { background: rgba(245,166,35,0.1); color: var(--accent); }
 
-/* â”€â”€ SUCCESS BANNER â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* SUCCESS BANNER */
 .success-banner {
   display: flex;
   align-items: center;
@@ -326,7 +326,7 @@ body {
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* â”€â”€ CLOCK IN/OUT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* CLOCK IN/OUT */
 .clock-status {
   display: flex;
   align-items: center;
@@ -384,7 +384,7 @@ body {
 }
 .btn-clockout:not(:disabled):hover { background: rgba(245,60,60,0.2); }
 
-/* â”€â”€ SESSIONS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* SESSIONS */
 .sessions-section { border-top: 1px solid var(--border); padding-top: 16px; }
 .sessions-title {
   font-family: var(--font-head);
@@ -421,7 +421,7 @@ body {
   letter-spacing: 0.04em;
 }
 
-/* â”€â”€ LEADERBOARD â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* LEADERBOARD */
 .board-toggle {
   display: flex;
   background: var(--surface);

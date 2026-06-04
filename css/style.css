@@ -645,3 +645,6 @@ body {
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
 }
+
+/* Ensure hidden attribute always wins over display:flex */
+[hidden] { display: none !important; }

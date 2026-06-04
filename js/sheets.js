@@ -2,19 +2,18 @@
 //  SHEETS.JS — all Google Sheets communication goes here
 // ============================================================
 
-// ── EmailJS config — reusing booking template ───────────────
-const EMAILJS_KEY  = "EqmmvGFGhEt5Kd5sj";
-const EMAILJS_SVC  = "service_zj9fjxe";
-const EMAILJS_TMPL = "template_4lpa23a"; // business notification template
+const EMAILJS_KEY   = "EqmmvGFGhEt5Kd5sj";
+const EMAILJS_SVC   = "service_zj9fjxe";
+const BIZ_TMPL      = "template_4lpa23a"; // business notification → dryerductdivers@gmail.com
+const CUST_TMPL     = "template_6mlbrqr"; // customer confirmation → {{customer_email}}
 
-// Initialize EmailJS only if the library is loaded (not needed on leaderboard/hours pages)
+// Initialize EmailJS only on pages that load the library
 if (typeof emailjs !== "undefined") {
   emailjs.init(EMAILJS_KEY);
 }
 
 const Sheets = {
 
-  // POST data to Apps Script
   async post(payload) {
     const res = await fetch(CONFIG.SCRIPT_URL, {
       method: "POST",
@@ -25,7 +24,6 @@ const Sheets = {
     return res.json();
   },
 
-  // GET data from Apps Script
   async get(params = {}) {
     const qs  = new URLSearchParams(params).toString();
     const url = `${CONFIG.SCRIPT_URL}?${qs}`;
@@ -36,14 +34,13 @@ const Sheets = {
 
 };
 
-// ── Send sale notification email via EmailJS ─────────────────
-// Reuses the booking business template (template_4lpa23a).
-// "To Email" is hardcoded to dryerductdivers@gmail.com in
-// the EmailJS template settings — no customer email needed.
+// ── Send sale emails ─────────────────────────────────────────
+// 1. Business notification  → dryerductdivers@gmail.com
+// 2. Customer confirmation  → customer's email
 async function sendSaleEmail(payload) {
   const params = {
     customer_name:    payload.customerName,
-    customer_email:   "—",                  // not collected on sales, placeholder
+    customer_email:   payload.customerEmail || "—",
     customer_phone:   "Salesman: " + payload.salesmanName,
     customer_address: payload.address,
     booking_date:     payload.scheduledDate,
@@ -53,14 +50,21 @@ async function sendSaleEmail(payload) {
   };
 
   try {
-    await emailjs.send(EMAILJS_SVC, EMAILJS_TMPL, params);
-    console.log("Sale email sent to dryerductdivers@gmail.com");
+    // Always send business notification
+    await emailjs.send(EMAILJS_SVC, BIZ_TMPL, params);
+    console.log("Business email sent.");
+
+    // Send customer confirmation only if email was provided
+    if (payload.customerEmail && payload.customerEmail.trim()) {
+      await emailjs.send(EMAILJS_SVC, CUST_TMPL, params);
+      console.log("Customer confirmation sent to " + payload.customerEmail);
+    }
   } catch (err) {
-    console.warn("EmailJS failed (sale notification):", err);
+    console.warn("EmailJS failed:", err);
   }
 }
 
-// ── Roster cache (loaded once per session) ──────────────────
+// ── Roster cache ─────────────────────────────────────────────
 let _rosterCache = null;
 
 async function getRoster() {

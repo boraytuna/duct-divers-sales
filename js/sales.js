@@ -19,20 +19,19 @@ function validate() {
   let valid = true;
 
   const required = [
-    { id: "customerName",   label: "Customer name is required" },
-    { id: "salesmanName",   label: "Salesman name is required" },
-    { id: "address",        label: "Address is required" },
-    { id: "serviceType",    label: "Select a service type" },
-    { id: "scheduledDate",  label: "Scheduled date is required" },
-    { id: "scheduledTime",  label: "Scheduled time is required" },
-    { id: "paymentMethod",  label: "Select a payment method" },
+    { id: "customerName",  label: "Customer name is required" },
+    { id: "salesmanName",  label: "Salesman name is required" },
+    { id: "address",       label: "Address is required" },
+    { id: "serviceType",   label: "Select a service type" },
+    { id: "scheduledDate", label: "Scheduled date is required" },
+    { id: "scheduledTime", label: "Scheduled time is required" },
+    { id: "paymentMethod", label: "Select a payment method" },
   ];
 
   required.forEach(({ id, label }) => {
     const elId = id === "paymentMethod" ? "paymentMethodValue" : id;
     const el   = document.getElementById(elId);
     const err  = document.getElementById(`err-${id}`);
-
     if (!el || !el.value.trim()) {
       if (err) { err.textContent = label; err.classList.add("visible"); }
       if (el)  el.classList.add("error");
@@ -42,6 +41,21 @@ function validate() {
       if (el)  el.classList.remove("error");
     }
   });
+
+  // Optional email — only validate format if something was entered
+  const emailEl  = document.getElementById("customerEmail");
+  const emailErr = document.getElementById("err-customerEmail");
+  if (emailEl && emailEl.value.trim()) {
+    const emailOk = /\S+@\S+\.\S+/.test(emailEl.value.trim());
+    if (!emailOk) {
+      emailErr.classList.add("visible");
+      emailEl.classList.add("error");
+      valid = false;
+    } else {
+      emailErr.classList.remove("visible");
+      emailEl.classList.remove("error");
+    }
+  }
 
   return valid;
 }
@@ -54,8 +68,7 @@ function clearError(id) {
   if (el)  el.classList.remove("error");
 }
 
-// Clear errors on input for text fields
-["customerName", "salesmanName", "address", "serviceType"].forEach(id => {
+["customerName", "salesmanName", "address", "serviceType", "customerEmail"].forEach(id => {
   const el = document.getElementById(id);
   if (el) el.addEventListener("input", () => clearError(id));
 });
@@ -79,6 +92,7 @@ document.getElementById("salesForm").addEventListener("submit", async (e) => {
     action:        "submitSale",
     timestamp:     now,
     customerName:  document.getElementById("customerName").value.trim(),
+    customerEmail: document.getElementById("customerEmail").value.trim(),
     salesmanName:  document.getElementById("salesmanName").value.trim(),
     address:       document.getElementById("address").value.trim(),
     serviceType:   document.getElementById("serviceType").value,
@@ -97,10 +111,10 @@ document.getElementById("salesForm").addEventListener("submit", async (e) => {
       return;
     }
 
-    // Send email notification to dryerductdivers@gmail.com
+    // Send business notification + customer confirmation (if email provided)
     await sendSaleEmail(payload);
 
-    showSuccess();
+    showSuccess(!!payload.customerEmail);
     document.getElementById("salesForm").reset();
     document.querySelectorAll(".pill").forEach(p => p.classList.remove("selected"));
     document.getElementById("paymentMethodValue").value = "";
@@ -115,8 +129,12 @@ document.getElementById("salesForm").addEventListener("submit", async (e) => {
   }
 });
 
-function showSuccess() {
+function showSuccess(emailSent) {
   const banner = document.getElementById("successBanner");
+  const sub    = banner.querySelector("p");
+  sub.textContent = emailSent
+    ? "Confirmation sent to customer."
+    : "Nice work. Ready for the next one.";
   banner.hidden = false;
   banner.scrollIntoView({ behavior: "smooth", block: "nearest" });
   setTimeout(() => { banner.hidden = true; }, 4000);

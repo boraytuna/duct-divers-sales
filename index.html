@@ -46,6 +46,14 @@
           <span class="field-error" id="err-customerName">Required</span>
         </div>
 
+        <!-- Customer Email -->
+        <div class="field-group">
+          <label class="field-label" for="customerEmail">Customer Email <span class="optional">(optional — sends confirmation)</span></label>
+          <input class="field-input" type="email" id="customerEmail" name="customerEmail"
+            placeholder="customer@email.com" autocomplete="off" />
+          <span class="field-error" id="err-customerEmail">Enter a valid email</span>
+        </div>
+
         <!-- Salesman Name -->
         <div class="field-group">
           <label class="field-label" for="salesmanName">Salesman / Referral <span class="req">*</span></label>
@@ -152,7 +160,6 @@
   <script src="js/config.js"></script>
   <script src="js/sheets.js"></script>
   <script src="js/sales.js"></script>
-
 
 </body>
 

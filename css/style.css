@@ -584,48 +584,48 @@ body {
   font-size: 0.78rem;
   color: var(--text-muted);
 }
+
 /* ============================================================
    LEADERBOARD ADDITIONS
    ============================================================ */
- 
-/* Motivational quote bar */
+
+/* Motivational quote bar — high contrast so it's always visible */
 .quote-bar {
   font-family: var(--font-head);
-  font-size: 0.95rem;
-  font-weight: 600;
+  font-size: 1rem;
+  font-weight: 700;
   font-style: italic;
-  color: var(--accent);
+  color: #fff;                              /* solid white — always visible */
   letter-spacing: 0.03em;
   text-align: center;
-  padding: 10px 16px;
-  background: rgba(245,166,35,0.07);
-  border: 1px solid rgba(245,166,35,0.2);
+  padding: 14px 16px;
+  background: rgba(245,166,35,0.12);
+  border: 1px solid rgba(245,166,35,0.35);
   border-radius: var(--radius-sm);
-  line-height: 1.4;
+  line-height: 1.5;
+  min-height: 52px;                         /* visible even before JS runs */
 }
- 
+
 /* Board meta row — subtitle + last updated */
 .board-meta {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 8px;
-  margin-bottom: 4px;
   padding: 0 2px;
 }
- 
+
 .board-subtitle {
   font-size: 0.8rem;
   color: var(--text-muted);
   font-weight: 500;
 }
- 
+
 .last-updated {
   font-size: 0.75rem;
   color: var(--text-dim);
   font-style: italic;
 }
- 
+
 /* Loading spinner */
 .board-loading {
   display: flex;
@@ -636,7 +636,7 @@ body {
   color: var(--text-muted);
   font-size: 0.95rem;
 }
- 
+
 .spinner {
   width: 28px;
   height: 28px;
@@ -645,4 +645,3 @@ body {
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
 }
- 

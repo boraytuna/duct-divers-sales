@@ -1,17 +1,9 @@
 // ============================================================
 //  LEADERBOARD.JS
-//  - Today / All Time toggle
-//  - Auto-refresh every 5 minutes
-//  - "Last updated X mins ago" timestamp
-//  - Motivational quotes (random on each load)
-//  - Loading spinner
-//  - Free Inspection excluded (handled in Apps Script)
 // ============================================================
 
-let currentMode    = "today";
-let lastUpdated    = null;
-let refreshTimer   = null;
-let countdownTimer = null;
+let currentMode  = "today";
+let lastUpdated  = null;
 
 const QUOTES = [
   "Hustle in silence. Let the numbers make the noise.",
@@ -27,27 +19,26 @@ const QUOTES = [
 ];
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Today's date display
+  // Today's date
   const d = new Date().toLocaleDateString("en-US", {
     weekday: "long", month: "short", day: "numeric",
     timeZone: "America/Detroit"
   });
   document.getElementById("todayDate").textContent = d;
 
-  // Random motivational quote
+  // Quote — always visible immediately
   const q = QUOTES[Math.floor(Math.random() * QUOTES.length)];
-  document.getElementById("motivationalQuote").textContent = q;
+  const qEl = document.getElementById("motivationalQuote");
+  if (qEl) qEl.textContent = '"' + q + '"';
 
   // Initial load
   loadBoard(currentMode);
 
   // Auto-refresh every 5 minutes
-  refreshTimer = setInterval(() => {
-    loadBoard(currentMode);
-  }, 5 * 60 * 1000);
+  setInterval(() => loadBoard(currentMode), 5 * 60 * 1000);
 
   // Update "last updated" text every 30 seconds
-  countdownTimer = setInterval(updateLastUpdatedText, 30 * 1000);
+  setInterval(updateLastUpdatedText, 30 * 1000);
 });
 
 // ── Toggle ───────────────────────────────────────────────────
@@ -57,8 +48,6 @@ function switchBoard(mode) {
 
   document.getElementById("btnToday").classList.toggle("active",   mode === "today");
   document.getElementById("btnAllTime").classList.toggle("active", mode === "alltime");
-
-  // Update subtitle
   document.getElementById("boardSubtitle").textContent =
     mode === "today" ? "Today's sales only" : "All-time rankings";
 
@@ -68,8 +57,6 @@ function switchBoard(mode) {
 // ── Load ─────────────────────────────────────────────────────
 async function loadBoard(mode) {
   showLoading();
-
-  // Map "alltime" → "all" for the Apps Script
   const scriptMode = mode === "alltime" ? "all" : "today";
 
   try {
@@ -85,9 +72,14 @@ async function loadBoard(mode) {
 
 // ── Render ───────────────────────────────────────────────────
 function renderBoard(board) {
-  if (!board.length) { showEmpty(); return; }
-
+  // Always hide loading first
   document.getElementById("boardLoading").hidden = true;
+
+  if (!board || board.length === 0) {
+    showEmpty();
+    return;
+  }
+
   document.getElementById("boardEmpty").hidden   = true;
   document.getElementById("boardContent").hidden = false;
 
@@ -96,7 +88,7 @@ function renderBoard(board) {
 }
 
 function renderPodium(top) {
-  const podium  = document.getElementById("podium");
+  const podium   = document.getElementById("podium");
   const medalMap = { 0: "🥇", 1: "🥈", 2: "🥉" };
 
   // Display order: 2nd, 1st, 3rd
@@ -109,7 +101,7 @@ function renderPodium(top) {
     <div class="podium-slot">
       <div class="podium-name">${p.name}</div>
       <div class="podium-count">${p.sales}</div>
-      <div class="podium-count-label">sales</div>
+      <div class="podium-count-label">SALES</div>
       <div class="podium-block">${medalMap[p.origRank]}</div>
     </div>
   `).join("");
@@ -133,20 +125,17 @@ function renderList(board) {
   }).join("");
 }
 
-// ── Last updated text ────────────────────────────────────────
+// ── Last updated ─────────────────────────────────────────────
 function updateLastUpdatedText() {
   const el = document.getElementById("lastUpdated");
   if (!lastUpdated || !el) return;
-
-  const diffMs   = Date.now() - lastUpdated.getTime();
-  const diffMins = Math.floor(diffMs / 60000);
-
-  if (diffMins < 1)       el.textContent = "Updated just now";
-  else if (diffMins === 1) el.textContent = "Updated 1 min ago";
-  else                     el.textContent = `Updated ${diffMins} mins ago`;
+  const mins = Math.floor((Date.now() - lastUpdated.getTime()) / 60000);
+  if (mins < 1)      el.textContent = "Updated just now";
+  else if (mins ===1) el.textContent = "Updated 1 min ago";
+  else               el.textContent = `Updated ${mins} mins ago`;
 }
 
-// ── State helpers ────────────────────────────────────────────
+// ── State helpers ─────────────────────────────────────────────
 function showLoading() {
   document.getElementById("boardLoading").hidden = false;
   document.getElementById("boardContent").hidden = true;

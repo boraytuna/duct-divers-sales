@@ -25,29 +25,40 @@
     </nav>
 
     <main class="main">
+
       <div class="page-header">
         <h1 class="page-title">Leaderboard</h1>
-        <p class="page-sub" id="boardDate">Today · <span id="todayDate"></span></p>
+        <p class="page-sub">Today · <span id="todayDate"></span></p>
       </div>
 
-      <!-- Toggle: Today / All Time -->
+      <!-- Motivational quote -->
+      <div class="quote-bar" id="motivationalQuote"></div>
+
+      <!-- Toggle -->
       <div class="board-toggle">
-        <button class="toggle-btn active" id="btnToday" onclick="switchBoard('today')">Today</button>
-        <button class="toggle-btn" id="btnAllTime" onclick="switchBoard('alltime')">All Time</button>
+        <button class="toggle-btn active" id="btnToday"   onclick="switchBoard('today')">Today</button>
+        <button class="toggle-btn"        id="btnAllTime" onclick="switchBoard('alltime')">All Time</button>
       </div>
 
-      <div id="boardLoading" class="board-loading">Loading…</div>
+      <!-- Subtitle + last updated -->
+      <div class="board-meta">
+        <span class="board-subtitle" id="boardSubtitle">Today's sales only</span>
+        <span class="last-updated"   id="lastUpdated"></span>
+      </div>
 
+      <!-- Loading spinner -->
+      <div id="boardLoading" class="board-loading">
+        <div class="spinner"></div>
+        <span>Loading…</span>
+      </div>
+
+      <!-- Board content -->
       <div id="boardContent" class="board-content" hidden>
-
-        <!-- Top 3 podium -->
-        <div class="podium" id="podium"></div>
-
-        <!-- Full ranked list -->
+        <div class="podium"     id="podium"></div>
         <div class="board-list" id="boardList"></div>
-
       </div>
 
+      <!-- Empty state -->
       <div id="boardEmpty" class="board-empty" hidden>
         <span class="empty-icon">📋</span>
         <p>No sales logged yet for this period.</p>

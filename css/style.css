@@ -584,3 +584,65 @@ body {
   font-size: 0.78rem;
   color: var(--text-muted);
 }
+/* ============================================================
+   LEADERBOARD ADDITIONS
+   ============================================================ */
+ 
+/* Motivational quote bar */
+.quote-bar {
+  font-family: var(--font-head);
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-style: italic;
+  color: var(--accent);
+  letter-spacing: 0.03em;
+  text-align: center;
+  padding: 10px 16px;
+  background: rgba(245,166,35,0.07);
+  border: 1px solid rgba(245,166,35,0.2);
+  border-radius: var(--radius-sm);
+  line-height: 1.4;
+}
+ 
+/* Board meta row — subtitle + last updated */
+.board-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+  margin-bottom: 4px;
+  padding: 0 2px;
+}
+ 
+.board-subtitle {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+ 
+.last-updated {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  font-style: italic;
+}
+ 
+/* Loading spinner */
+.board-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 40px 20px;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+ 
+.spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+ 

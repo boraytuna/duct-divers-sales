@@ -69,8 +69,8 @@ document.getElementById("salesForm").addEventListener("submit", async (e) => {
   const spinner = document.getElementById("btnSpinner");
   const label   = btn.querySelector(".btn-label");
 
-  btn.disabled  = true;
-  label.hidden  = true;
+  btn.disabled   = true;
+  label.hidden   = true;
   spinner.hidden = false;
 
   const now = new Date().toLocaleString("en-US", { timeZone: "America/Detroit" });
@@ -82,8 +82,8 @@ document.getElementById("salesForm").addEventListener("submit", async (e) => {
     salesmanName:  document.getElementById("salesmanName").value.trim(),
     address:       document.getElementById("address").value.trim(),
     serviceType:   document.getElementById("serviceType").value,
-    scheduledDate: document.getElementById("scheduledDate").value,   // "YYYY-MM-DD"
-    scheduledTime: document.getElementById("scheduledTime").value,   // "HH:MM"
+    scheduledDate: document.getElementById("scheduledDate").value,
+    scheduledTime: document.getElementById("scheduledTime").value,
     price:         document.getElementById("price").value.trim() || "",
     paymentMethod: document.getElementById("paymentMethodValue").value,
     notes:         document.getElementById("notes").value.trim(),
@@ -96,6 +96,9 @@ document.getElementById("salesForm").addEventListener("submit", async (e) => {
       alert(result.error);
       return;
     }
+
+    // Send email notification to dryerductdivers@gmail.com
+    await sendSaleEmail(payload);
 
     showSuccess();
     document.getElementById("salesForm").reset();

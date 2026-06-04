@@ -1,158 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Duct Divers — Sales</title>
+  <title>Duct Divers — Leaderboard</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500;600&display=swap"
-    rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
 </head>
-
 <body>
 
   <div class="app-shell">
 
-    <!-- NAV -->
     <nav class="nav">
       <div class="nav-logo">
         <span class="logo-mark">DD</span>
         <span class="logo-text">Duct Divers</span>
       </div>
       <div class="nav-links">
-        <a href="index.html" class="nav-link active">New Sale</a>
+        <a href="index.html" class="nav-link">New Sale</a>
         <a href="hours.html" class="nav-link">Hours</a>
-        <a href="leaderboard.html" class="nav-link">Board</a>
+        <a href="leaderboard.html" class="nav-link active">Board</a>
       </div>
     </nav>
 
-    <!-- MAIN -->
     <main class="main">
+
       <div class="page-header">
-        <h1 class="page-title">Log a Sale</h1>
-        <p class="page-sub">Fill out every field at the door. Takes 30 seconds.</p>
+        <h1 class="page-title">Leaderboard</h1>
+        <p class="page-sub">Today · <span id="todayDate"></span></p>
       </div>
 
-      <form id="salesForm" class="form-card" novalidate>
-
-        <!-- Customer Name -->
-        <div class="field-group">
-          <label class="field-label" for="customerName">Customer Name <span class="req">*</span></label>
-          <input class="field-input" type="text" id="customerName" name="customerName" placeholder="Full name"
-            autocomplete="off" required />
-          <span class="field-error" id="err-customerName">Required</span>
-        </div>
-
-        <!-- Salesman Name -->
-        <div class="field-group">
-          <label class="field-label" for="salesmanName">Salesman / Referral <span class="req">*</span></label>
-          <div class="autocomplete-wrap">
-            <input class="field-input" type="text" id="salesmanName" name="salesmanName"
-              placeholder="Start typing your name…" autocomplete="off" required />
-            <ul class="autocomplete-list" id="salesmanSuggestions" role="listbox"></ul>
-          </div>
-          <span class="field-error" id="err-salesmanName">Required</span>
-        </div>
-
-        <!-- Address -->
-        <div class="field-group">
-          <label class="field-label" for="address">Address <span class="req">*</span></label>
-          <input class="field-input" type="text" id="address" name="address"
-            placeholder="Street address" autocomplete="off" required />
-          <span class="field-error" id="err-address">Address is required</span>
-        </div>
-
-        <!-- Service Type -->
-        <div class="field-group">
-          <label class="field-label" for="serviceType">Service Type <span class="req">*</span></label>
-          <div class="select-wrap">
-            <select class="field-input field-select" id="serviceType" name="serviceType" required>
-              <option value="">— Select a service —</option>
-              <option value="Free Inspection">Free Inspection</option>
-              <option value="General Dryer Duct Cleaning">General Dryer Duct Cleaning</option>
-              <option value="Repair and Cleaning">Repair and Cleaning</option>
-              <option value="Rebuild">Rebuild</option>
-              <option value="Gutter Cleaning">Gutter Cleaning</option>
-            </select>
-            <span class="select-arrow">▾</span>
-          </div>
-          <span class="field-error" id="err-serviceType">Required</span>
-        </div>
-
-        <!-- Scheduled Date -->
-        <div class="field-group">
-          <label class="field-label" for="scheduledDate">Scheduled Date <span class="req">*</span></label>
-          <input class="field-input" type="date" id="scheduledDate" name="scheduledDate" required />
-          <span class="field-error" id="err-scheduledDate">Required</span>
-        </div>
-
-        <!-- Scheduled Time -->
-        <div class="field-group">
-          <label class="field-label" for="scheduledTime">Scheduled Time <span class="req">*</span></label>
-          <input class="field-input" type="time" id="scheduledTime" name="scheduledTime" required />
-          <span class="field-error" id="err-scheduledTime">Required</span>
-        </div>
-
-        <!-- Payment Method -->
-        <div class="field-group">
-          <label class="field-label">Payment Method <span class="req">*</span></label>
-          <div class="pill-group" id="paymentMethod">
-            <button type="button" class="pill" data-value="Square" onclick="selectPill(this, 'paymentMethod')">
-              <span class="pill-icon">💳</span> Square
-            </button>
-            <button type="button" class="pill" data-value="Cash" onclick="selectPill(this, 'paymentMethod')">
-              <span class="pill-icon">💵</span> Cash
-            </button>
-          </div>
-          <input type="hidden" id="paymentMethodValue" name="paymentMethod" required />
-          <span class="field-error" id="err-paymentMethod">Select a payment method</span>
-        </div>
-
-        <!-- Price -->
-        <div class="field-group">
-          <label class="field-label" for="price">Price <span class="optional">(optional)</span></label>
-          <div class="price-wrap">
-            <span class="price-symbol">$</span>
-            <input class="field-input price-input" type="number" id="price" name="price" placeholder="0.00" min="0"
-              step="0.01" />
-          </div>
-        </div>
-
-        <!-- Notes -->
-        <div class="field-group">
-          <label class="field-label" for="notes">Notes <span class="optional">(optional)</span></label>
-          <textarea class="field-input field-textarea" id="notes" name="notes" placeholder="Anything worth noting…"
-            rows="3"></textarea>
-        </div>
-
-        <!-- Submit -->
-        <button type="submit" class="btn-submit" id="submitBtn">
-          <span class="btn-label">Submit Sale</span>
-          <span class="btn-spinner" id="btnSpinner" hidden>⟳</span>
-        </button>
-
-      </form>
-
-      <!-- Success Banner -->
-      <div class="success-banner" id="successBanner" hidden>
-        <span class="success-icon">✓</span>
-        <div>
-          <strong>Sale logged!</strong>
-          <p>Nice work. Ready for the next one.</p>
-        </div>
+      <!-- Toggle -->
+      <div class="board-toggle">
+        <button class="toggle-btn active" id="btnToday"   onclick="switchBoard('today')">Today</button>
+        <button class="toggle-btn"        id="btnAllTime" onclick="switchBoard('alltime')">All Time</button>
       </div>
+
+      <!-- Subtitle + last updated -->
+      <div class="board-meta">
+        <span class="board-subtitle" id="boardSubtitle">Today's sales only</span>
+        <span class="last-updated"   id="lastUpdated"></span>
+      </div>
+
+      <!-- Loading spinner -->
+      <div id="boardLoading" class="board-loading">
+        <div class="spinner"></div>
+        <span>Loading...</span>
+      </div>
+
+      <!-- Board content -->
+      <div id="boardContent" class="board-content" hidden>
+        <div class="podium"     id="podium"></div>
+        <div class="board-list" id="boardList"></div>
+      </div>
+
+      <!-- Empty state -->
+      <div id="boardEmpty" class="board-empty" hidden>
+        <span class="empty-icon">📋</span>
+        <p>No sales logged yet for this period.</p>
+      </div>
+
+      <!-- Motivational quote — below the scoreboard -->
+      <div class="quote-bar" id="motivationalQuote"></div>
 
     </main>
   </div>
 
+  <!-- config and sheets MUST load before leaderboard.js -->
   <script src="js/config.js"></script>
   <script src="js/sheets.js"></script>
-  <script src="js/sales.js"></script>
-
-
+  <script src="js/leaderboard.js"></script>
 </body>
-
 </html>

@@ -7,8 +7,10 @@ const EMAILJS_KEY  = "EqmmvGFGhEt5Kd5sj";
 const EMAILJS_SVC  = "service_zj9fjxe";
 const EMAILJS_TMPL = "template_4lpa23a"; // business notification template
 
-// Initialize EmailJS once
-emailjs.init(EMAILJS_KEY);
+// Initialize EmailJS only if the library is loaded (not needed on leaderboard/hours pages)
+if (typeof emailjs !== "undefined") {
+  emailjs.init(EMAILJS_KEY);
+}
 
 const Sheets = {
 

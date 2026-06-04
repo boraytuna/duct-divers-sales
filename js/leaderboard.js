@@ -2,8 +2,8 @@
 //  LEADERBOARD.JS
 // ============================================================
 
-let currentMode  = "today";
-let lastUpdated  = null;
+let currentMode = "today";
+let lastUpdated = null;
 
 const QUOTES = [
   "Hustle in silence. Let the numbers make the noise.",
@@ -24,12 +24,12 @@ document.addEventListener("DOMContentLoaded", () => {
     weekday: "long", month: "short", day: "numeric",
     timeZone: "America/Detroit"
   });
-  document.getElementById("todayDate").textContent = d;
+  const dateEl = document.getElementById("todayDate");
+  if (dateEl) dateEl.textContent = d;
 
-  // Quote — always visible immediately
-  const q = QUOTES[Math.floor(Math.random() * QUOTES.length)];
+  // Quote — always set immediately
   const qEl = document.getElementById("motivationalQuote");
-  if (qEl) qEl.textContent = '"' + q + '"';
+  if (qEl) qEl.textContent = '"' + QUOTES[Math.floor(Math.random() * QUOTES.length)] + '"';
 
   // Initial load
   loadBoard(currentMode);
@@ -59,12 +59,20 @@ async function loadBoard(mode) {
   showLoading();
   const scriptMode = mode === "alltime" ? "all" : "today";
 
+  // Safety net — never spin forever
+  const timeout = setTimeout(() => {
+    console.warn("Leaderboard timed out");
+    showEmpty();
+  }, 10000);
+
   try {
     const data = await Sheets.get({ action: "getLeaderboard", mode: scriptMode });
+    clearTimeout(timeout);
     renderBoard(data.board || []);
     lastUpdated = new Date();
     updateLastUpdatedText();
   } catch (e) {
+    clearTimeout(timeout);
     console.error("Leaderboard load failed:", e);
     showEmpty();
   }
@@ -72,16 +80,19 @@ async function loadBoard(mode) {
 
 // ── Render ───────────────────────────────────────────────────
 function renderBoard(board) {
-  // Always hide loading first
-  document.getElementById("boardLoading").hidden = true;
+  // Always kill the spinner first — no matter what
+  const loading = document.getElementById("boardLoading");
+  if (loading) loading.hidden = true;
 
   if (!board || board.length === 0) {
     showEmpty();
     return;
   }
 
-  document.getElementById("boardEmpty").hidden   = true;
-  document.getElementById("boardContent").hidden = false;
+  const empty   = document.getElementById("boardEmpty");
+  const content = document.getElementById("boardContent");
+  if (empty)   empty.hidden   = true;
+  if (content) content.hidden = false;
 
   renderPodium(board.slice(0, 3));
   renderList(board);
@@ -89,9 +100,9 @@ function renderBoard(board) {
 
 function renderPodium(top) {
   const podium   = document.getElementById("podium");
+  if (!podium) return;
   const medalMap = { 0: "🥇", 1: "🥈", 2: "🥉" };
 
-  // Display order: 2nd, 1st, 3rd
   const display = [];
   if (top[1]) display.push({ ...top[1], origRank: 1 });
   if (top[0]) display.push({ ...top[0], origRank: 0 });
@@ -109,6 +120,7 @@ function renderPodium(top) {
 
 function renderList(board) {
   const list = document.getElementById("boardList");
+  if (!list) return;
   list.innerHTML = board.map((p, i) => {
     const rank = i + 1;
     const rev  = p.revenue ? `$${Number(p.revenue).toLocaleString()}` : "";
@@ -130,20 +142,26 @@ function updateLastUpdatedText() {
   const el = document.getElementById("lastUpdated");
   if (!lastUpdated || !el) return;
   const mins = Math.floor((Date.now() - lastUpdated.getTime()) / 60000);
-  if (mins < 1)      el.textContent = "Updated just now";
-  else if (mins ===1) el.textContent = "Updated 1 min ago";
-  else               el.textContent = `Updated ${mins} mins ago`;
+  if (mins < 1)       el.textContent = "Updated just now";
+  else if (mins === 1) el.textContent = "Updated 1 min ago";
+  else                el.textContent = `Updated ${mins} mins ago`;
 }
 
 // ── State helpers ─────────────────────────────────────────────
 function showLoading() {
-  document.getElementById("boardLoading").hidden = false;
-  document.getElementById("boardContent").hidden = true;
-  document.getElementById("boardEmpty").hidden   = true;
+  const loading = document.getElementById("boardLoading");
+  const content = document.getElementById("boardContent");
+  const empty   = document.getElementById("boardEmpty");
+  if (loading) loading.hidden = false;
+  if (content) content.hidden = true;
+  if (empty)   empty.hidden   = true;
 }
 
 function showEmpty() {
-  document.getElementById("boardLoading").hidden = true;
-  document.getElementById("boardContent").hidden = true;
-  document.getElementById("boardEmpty").hidden   = false;
+  const loading = document.getElementById("boardLoading");
+  const content = document.getElementById("boardContent");
+  const empty   = document.getElementById("boardEmpty");
+  if (loading) loading.hidden = true;
+  if (content) content.hidden = true;
+  if (empty)   empty.hidden   = false;
 }

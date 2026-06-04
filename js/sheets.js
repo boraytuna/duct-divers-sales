@@ -2,6 +2,14 @@
 //  SHEETS.JS — all Google Sheets communication goes here
 // ============================================================
 
+// ── EmailJS config — reusing booking template ───────────────
+const EMAILJS_KEY  = "EqmmvGFGhEt5Kd5sj";
+const EMAILJS_SVC  = "service_zj9fjxe";
+const EMAILJS_TMPL = "template_4lpa23a"; // business notification template
+
+// Initialize EmailJS once
+emailjs.init(EMAILJS_KEY);
+
 const Sheets = {
 
   // POST data to Apps Script
@@ -17,7 +25,7 @@ const Sheets = {
 
   // GET data from Apps Script
   async get(params = {}) {
-    const qs = new URLSearchParams(params).toString();
+    const qs  = new URLSearchParams(params).toString();
     const url = `${CONFIG.SCRIPT_URL}?${qs}`;
     const res = await fetch(url);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -25,6 +33,30 @@ const Sheets = {
   },
 
 };
+
+// ── Send sale notification email via EmailJS ─────────────────
+// Reuses the booking business template (template_4lpa23a).
+// "To Email" is hardcoded to dryerductdivers@gmail.com in
+// the EmailJS template settings — no customer email needed.
+async function sendSaleEmail(payload) {
+  const params = {
+    customer_name:    payload.customerName,
+    customer_email:   "—",                  // not collected on sales, placeholder
+    customer_phone:   "Salesman: " + payload.salesmanName,
+    customer_address: payload.address,
+    booking_date:     payload.scheduledDate,
+    booking_slot:     payload.scheduledTime || "Not specified",
+    booking_service:  payload.serviceType,
+    booking_referral: payload.paymentMethod + (payload.price ? " — $" + payload.price : ""),
+  };
+
+  try {
+    await emailjs.send(EMAILJS_SVC, EMAILJS_TMPL, params);
+    console.log("Sale email sent to dryerductdivers@gmail.com");
+  } catch (err) {
+    console.warn("EmailJS failed (sale notification):", err);
+  }
+}
 
 // ── Roster cache (loaded once per session) ──────────────────
 let _rosterCache = null;
@@ -50,7 +82,6 @@ function bindAutocomplete(inputId, listId) {
   let names = [];
   let highlighted = -1;
 
-  // Load roster on first focus
   input.addEventListener("focus", async () => {
     if (names.length === 0) names = await getRoster();
   });
@@ -78,7 +109,6 @@ function bindAutocomplete(inputId, listId) {
     });
   });
 
-  // Keyboard nav
   input.addEventListener("keydown", (e) => {
     const items = list.querySelectorAll("li");
     if (!items.length) return;
